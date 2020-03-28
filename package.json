@@ -1,0 +1,9 @@
+{
+  "name": "Catan Online",
+  "version": "0.0.1",
+  "description": "Play Catan With Friends!",
+  "dependencies": {
+    "express": "^4.15.2",
+    "socket.io": "^2.3.0"
+  }
+}

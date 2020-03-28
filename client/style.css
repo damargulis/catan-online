@@ -1,0 +1,276 @@
+
+.port {
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  background-color: black;
+  border-radius: 7.5px;
+}
+
+#port-1 {
+  top: -5px;
+  left: 40px;
+}
+
+#port-2 {
+  top: -5px;
+  left: 145px;
+}
+
+#port-3 {
+  left: 240px;
+  top: 56px;
+}
+
+#port-4 {
+  top: 90px;
+  left: -10px;
+}
+
+#port-5 {
+  top: 145px;
+  left: 290px;
+}
+
+#port-6 {
+  top: 200px;
+  left: -10px;
+}
+
+#port-7 {
+  top: 235px;
+  left: 240px;
+}
+
+#port-8 {
+  top: 295px;
+  left: 40px;
+}
+
+#port-9 {
+  top: 295px;
+  left: 145px;
+}
+
+.chit {
+  display: inline-block;
+  width: 3.7em;
+  padding-top: 2em;
+}
+
+.board-container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+}
+
+#roads {
+  z-index: 2;
+}
+
+#settlements {
+  z-index: 3;
+}
+
+#chits {
+  z-index: 1;
+}
+
+#board {
+  width: 90%;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-left: 10%;
+  float: left;
+  position: relative;
+}
+
+.row {
+  position: relative;
+  height: 3.5em;
+}
+
+.row.three {
+  left: calc(2em * 2 / 1.1);
+}
+
+.row.four {
+  left: calc(2em / 1.1);
+}
+
+#roads > .row.five {
+  left: .6em;
+}
+
+#roads > .row.four {
+  left: 2.5em;
+}
+
+.row.six {
+  left: 3.6em;
+}
+
+#roads > .row.six.upright {
+  left: -1.25em;
+}
+
+.row.seven {
+  left: calc(2em * 2 / 1.1 - 1em);
+}
+
+.row.eight {
+  left: 1.6em;
+}
+
+.row.eleven {
+  left: -1em;
+}
+
+.row.down button:nth-child(odd) {
+  position: relative;
+  top: 1em;
+}
+
+.row.up button:nth-child(odd) {
+  position: relative;
+  top: -1em;
+}
+
+.row.right div:nth-child(even) {
+  transform: rotate(-60deg);
+}
+
+.row.right div:nth-child(odd) {
+  transform: rotate(60deg);
+}
+
+.row.left div:nth-child(even) {
+  transform: rotate(60deg);
+}
+
+.row.left div:nth-child(odd) {
+  transform: rotate(-60deg);
+}
+
+.row.right, .row.left {
+  height: 1.5em;
+}
+
+.row.upright {
+  height: 2em;
+}
+
+.settlement {
+  margin-right: calc(1em / 1.1) ;
+  height: 15px;
+  visibility: hidden;
+  border-radius: 50%;
+}
+
+.available {
+  pointer-events: auto;
+}
+
+.settlement.available {
+  visibility: visible;
+}
+
+.road.available {
+  background-color: black;
+}
+
+.cell {
+  position: relative;
+  margin: 1em auto;
+  width: 2em;
+  height: calc(2em * 1.7);
+  border-radius: 1em/.01em;
+  background: #ccc;
+  transform: rotate(-90deg);
+  display: inline-block;
+  margin-right: calc(2em / 1.3);
+  transition: all 150ms ease-in-out;
+}
+
+.cell:before, .cell:after {
+  position: absolute;
+  width: inherit;
+  height: inherit;
+  border-radius: inherit;
+  background: inherit;
+  content: '';
+}
+.cell:before {
+  transform: rotate(60deg);
+}
+.cell:after {
+  transform: rotate(-60deg);
+}
+
+#info-panel {
+  height: 50px;
+}
+
+#game-info {
+  float: left;
+  width: 90%;
+  margin: 0 auto;
+  padding-top: 50px;
+}
+
+.brick {
+  background-color: red;
+}
+.grain {
+  background-color: yellow;
+}
+.lumber {
+  background-color: brown;
+}
+.ore {
+  background-color: grey;
+}
+.wool {
+  background-color: lightblue;
+}
+.desert {
+  background-color: purple;
+}
+.player {
+  height: 90px;
+  width: 23%;
+  border: solid black 1px;
+  display: inline-block;
+}
+
+#game-info > div {
+  border: solid black 1px;
+}
+
+#hand-info > div {
+  display: inline-block;
+  padding-left: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.road {
+  width: 4px;
+  height: 2em;
+  display: inline-block;
+  margin-right: 1.4em;
+}
+
+.upright > .road {
+  margin-right: 3.4em;
+}
+
+#log {
+  height: 100px;
+  overflow: scroll;
+}
+
+.city {
+  box-shadow: 3px 3px brown, -3px 3px brown, 3px -3px brown, -3px -3px brown;
+}
