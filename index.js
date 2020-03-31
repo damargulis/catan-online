@@ -1,3 +1,11 @@
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
 const Resources = {
   BRICK: 'brick',
   GRAIN: 'grain',
@@ -6,55 +14,7 @@ const Resources = {
   WOOL: 'wool',
   DESERT: 'desert',
 };
-
 const ANY = 'ANY';
-const SettlementToPortMap = {
-  0: ANY,
-  1: ANY,
-  3: Resources.GRAIN,
-  4: Resources.GRAIN,
-  14: Resources.ORE,
-  15: Resources.ORE,
-  7: Resources.LUMBER,
-  17: Resources.LUMBER,
-  26: ANY,
-  37: ANY,
-  28: Resources.BRICK,
-  38: Resources.BRICK,
-  45: Resources.WOOL,
-  46: Resources.WOOL,
-  47: ANY,
-  48: ANY,
-  50: ANY,
-  51: ANY,
-}
-
-// resourceIndex: [settlement1, settlement2, ...]
-const ResourceToSettlementMap = [
-  [0, 1, 2, 8, 9, 10],
-  [2, 3, 4, 10, 11, 12],
-  [4, 5, 6, 12, 13, 14],
-
-  [7, 8, 9, 17, 18, 19],
-  [9, 10, 11, 19, 20, 21],
-  [11, 12, 13, 21, 22, 23],
-  [13, 14, 15, 23, 24, 25],
-
-  [16, 17, 18, 27, 28, 29],
-  [18, 19, 20, 29, 30, 31],
-  [20, 21, 22, 31, 32, 33],
-  [22, 23, 24, 33, 34, 35],
-  [24, 25, 26, 35, 36, 37],
-
-  [28, 29, 30, 38, 39, 40],
-  [30, 31, 32, 40, 41, 42],
-  [32, 33, 34, 42, 43, 44],
-  [34, 35, 36, 44, 45, 46],
-
-  [39, 40, 41, 47, 48, 49],
-  [41, 42, 43, 49, 50, 51],
-  [43, 44, 45, 51, 52, 53],
-];
 
 // roadIndex: [settlement1, settlement2]
 const RoadToSettlementMap = [
@@ -142,19 +102,64 @@ const RoadToSettlementMap = [
   [52, 53],
 ];
 
-class Road {
-  constructor() {
-    this.owner_ = null;
-  }
+// resourceIndex: [settlement1, settlement2, ...]
+const ResourceToSettlementMap = [
+  [0, 1, 2, 8, 9, 10],
+  [2, 3, 4, 10, 11, 12],
+  [4, 5, 6, 12, 13, 14],
 
-  setOwner(player) {
-    this.owner_ = player;
-  }
+  [7, 8, 9, 17, 18, 19],
+  [9, 10, 11, 19, 20, 21],
+  [11, 12, 13, 21, 22, 23],
+  [13, 14, 15, 23, 24, 25],
 
-  getOwner() {
-    return this.owner_;
-  }
+  [16, 17, 18, 27, 28, 29],
+  [18, 19, 20, 29, 30, 31],
+  [20, 21, 22, 31, 32, 33],
+  [22, 23, 24, 33, 34, 35],
+  [24, 25, 26, 35, 36, 37],
+
+  [28, 29, 30, 38, 39, 40],
+  [30, 31, 32, 40, 41, 42],
+  [32, 33, 34, 42, 43, 44],
+  [34, 35, 36, 44, 45, 46],
+
+  [39, 40, 41, 47, 48, 49],
+  [41, 42, 43, 49, 50, 51],
+  [43, 44, 45, 51, 52, 53],
+];
+
+
+const SettlementToPortMap = {
+  0: ANY,
+  1: ANY,
+  3: Resources.GRAIN,
+  4: Resources.GRAIN,
+  14: Resources.ORE,
+  15: Resources.ORE,
+  7: Resources.LUMBER,
+  17: Resources.LUMBER,
+  26: ANY,
+  37: ANY,
+  28: Resources.BRICK,
+  38: Resources.BRICK,
+  45: Resources.WOOL,
+  46: Resources.WOOL,
+  47: ANY,
+  48: ANY,
+  50: ANY,
+  51: ANY,
 }
+
+const Cards = {
+  KNIGHT: 'Knight',
+  VICTORY_POINT: 'Victory Point',
+  MONOPOLY: 'Monopoly',
+  ROAD_BUILDER: 'Road Builder',
+  YEAR_OF_PLENTY: 'Year of Plenty',
+};
+
+const playerColor = ['deeppink', 'cyan', 'green', 'darkorange'];
 
 class Settlement {
   constructor() {
@@ -179,20 +184,19 @@ class Settlement {
   }
 }
 
-function shuffleArray(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i+1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+class Road {
+  constructor() {
+    this.owner_ = null;
+  }
+
+  setOwner(player) {
+    this.owner_ = player;
+  }
+
+  getOwner() {
+    return this.owner_;
   }
 }
-
-const Cards = {
-  KNIGHT: 'Knight',
-  VICTORY_POINT: 'Victory Point',
-  MONOPOLY: 'Monopoly',
-  ROAD_BUILDER: 'Road Builder',
-  YEAR_OF_PLENTY: 'Year of Plenty',
-};
 
 class Board {
   constructor() {
@@ -313,20 +317,14 @@ class Board {
     const ports = settlementIndexes.map((index) => {
       return SettlementToPortMap[index];
     });
-    if (ports.find((p) => p == ANY)) {
-      return Object.values(Resources).filter((resource) => {
-        return player.resources_[resource] >= 2;
-      }).map((resource) => {
-        return [resource, 2];
-      });
-    }
+    const hasAny = ports.find((p) => p == ANY);
     return Object.values(Resources).map((resource) => {
-      if (ports.find((r) => r == resource) && player.resources_[resource] >= 3) {
+      if (ports.find((r) => r == resource) && player.resources_[resource] >= 2) {
+        return [resource, 2];
+      } else if (hasAny && player.resources_[resource] >= 3) {
         return [resource, 3];
-      } else if (player.resources_[resource] >= 4) {
-        return [resource, 4];
       } else {
-        return null
+        return null;
       }
     }).filter((a) => !!a);
   }
@@ -604,6 +602,7 @@ class Player {
     if (amt <= 7) {
       return Promise.resolve();
     }
+    log("Waiting for " + this.getName() + " to drop half their resources.");
     const toDrop = Math.floor(amt / 2);
     return this.doAction_('drop-resources', {
       amt: toDrop, resources: this.resources_
@@ -780,6 +779,7 @@ class Player {
   }
 }
 
+
 class Game {
   constructor(players) {
     this.players_ = players;
@@ -825,7 +825,7 @@ class Game {
     if (playersToRob.length > 0) {
       const robbing = await player.pickPlayerToRob(playersToRob);
       const resource = robbing.getRandomResource();
-      log(player.getName() + ' stole a ' + resource + ' from ' + robbing.getName());
+      log(player.getName() + ' stole a card from ' + robbing.getName());
       robbing.addResource(resource, -1);
       player.addResource(resource);
       player.sendState();
@@ -887,6 +887,7 @@ class Game {
   }
 
   async doTurn_(player) {
+    //todo: top level enum
     const END_TURN = 'End Turn';
     const ROAD = 'Buy Road';
     const SETTLEMENT = 'Buy Settlement';
@@ -895,6 +896,7 @@ class Game {
     const PLAY_CARD = 'Play Development Card';
     const TRADE = 'Trade with Player';
     const EXCHANGE = 'Trade with Bank';
+    const AUCTION = 'Auction';
     while (true) {
       const actions = [END_TURN];
       if (player.canAffordRoad() && this.board_.canPlaceRoad(player)) {
@@ -917,6 +919,9 @@ class Game {
       }
       if (this.board_.canTradeBank(player)) {
         actions.push(EXCHANGE);
+      }
+      if (player.totalResources() >= 1) {
+        actions.push(AUCTION);
       }
       const action = await player.pickAction(actions)
       switch (action) {
@@ -1114,7 +1119,9 @@ class Game {
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+  pingTimeout: 60000,
+});
 
 let players = [];
 let game;
@@ -1124,8 +1131,6 @@ app.use(express.static(__dirname + '/client'));
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/client/welcome.html');
 });
-
-const playerColor = ['deeppink', 'cyan', 'green', 'darkorange'];
 
 io.on('connection', (socket) => {
   console.log('A user connected');

@@ -209,7 +209,7 @@
 }
 
 #info-panel {
-  height: 50px;
+  height: 75px;
 }
 
 #game-info {
@@ -235,7 +235,7 @@
   background-color: lightblue;
 }
 .desert {
-  background-color: purple;
+  background-color: black;
 }
 .player {
   height: 90px;
