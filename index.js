@@ -471,6 +471,10 @@ class Player {
     this.longestRoad_ = false;
   }
 
+  alert(text) {
+    this.socket_.emit('alert', {text});
+  }
+
   playKnight() {
     this.knightsPlayed_++;
   }
@@ -517,6 +521,7 @@ class Player {
       buttons.push('Accept');
     }
     buttons.push('Reject');
+    this.alert("Trade offered to you.");
     return this.doAction_('buttons', {
       'buttons': buttons,
       'text': player.getName() + ' is offering ' + offerString + 'for ' + askingString,
@@ -604,6 +609,7 @@ class Player {
     }
     log("Waiting for " + this.getName() + " to drop half their resources.");
     const toDrop = Math.floor(amt / 2);
+    this.alert('Drop half your resources!');
     return this.doAction_('drop-resources', {
       amt: toDrop, resources: this.resources_
     }).then((amts) => {
@@ -794,6 +800,7 @@ class Game {
         this.playerTurn_ = (this.playerTurn_ + 1) % this.players_.length;
         sendGameState();
         const player = this.players_[this.playerTurn_];
+        player.alert('Your Turn');
         await player.roll();
         let roll = -1;
         while (roll < 0 || (roll == 7 && turns < this.players_.length)) {
@@ -920,7 +927,7 @@ class Game {
       if (this.board_.canTradeBank(player)) {
         actions.push(EXCHANGE);
       }
-      if (player.totalResources() >= 1) {
+      if (this.canTrade_(player)) {
         actions.push(AUCTION);
       }
       const action = await player.pickAction(actions)
@@ -1084,6 +1091,7 @@ class Game {
       const player = togo[i];
       this.playerTurn_ = this.players_.indexOf(player);
       sendGameState();
+      player.alert('Your Turn');
       const settlement = await player.pickSettlement(this.board_.getAvailableSettlements(), false);
       this.board_.buySettlement(settlement, player);
       log(player.getName() + " picked settlement " + settlement);

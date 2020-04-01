@@ -124,6 +124,13 @@ function clearActions() {
   });
 }
 
+socket.on('alert', (msg) => {
+  const audio = document.getElementById('notification');
+  audio.src = "./resources/notification.mp3";
+  audio.play();
+  alert(msg.text);
+});
+
 socket.on('action', (msg, resolve) => {
   const actionTextNode = document.getElementById('action-info');
   const buttonsNode = document.getElementById('buttons');
