@@ -528,6 +528,37 @@ class Player {
     });
   }
 
+  doAuction(offer, asking) {
+    let offerString = "";
+    for (const resource in offer) {
+      if (offer[resource]) {
+        offerString += offer[resource] + " " + resource + " ";
+      }
+    }
+    let askingString = "";
+    let canAfford = true;
+    for (const resource in asking) {
+      if (asking[resource]) {
+        askingString += asking[resource] + " " + resource + " ";
+      }
+      if (asking[resource] > this.resources_[resource]) {
+        canAfford = false;
+      }
+    }
+    const buttons = [];
+    if (canAfford) {
+      buttons.push('Accept');
+    }
+    buttons.push('Reject');
+    this.alert("Auction! First to accept gets it!.");
+    return this.doAction_('buttons', {
+      'buttons': buttons,
+      'text': 'Offering ' + offerString + 'for ' + askingString,
+    }).then((ans) => {
+      return ans == 'Accept' ? Promise.resolve(this) : Promise.reject();
+    });
+  }
+
   pickResource() {
     return this.doAction_('buttons', {
       'buttons': Object.values(Resources), 'text': 'Pick a Resource'
@@ -679,10 +710,11 @@ class Player {
     return this.doAction_('buttons', {'buttons': actions});
   }
 
-  pickTradeAmounts(tradePartner) {
+  pickTradeAmounts(text) {
     return this.doAction_('trade', {
       'owned': this.resources_,
       'cancellable': true,
+      'text': text,
     });
   }
 
@@ -893,6 +925,16 @@ class Game {
     });
   }
 
+  createAuction_(tradeAmts, player) {
+    log(player.getName() + " created an auction");
+    const players = this.players_.filter((p) => p != player);
+    return [...players.map((p) => {
+      return p.doAuction(tradeAmts.offer, tradeAmts.asking);
+    }), new Promise((resolve) => {
+      setTimeout(resolve, 10000);
+    })];
+  }
+
   async doTurn_(player) {
     //todo: top level enum
     const END_TURN = 'End Turn';
@@ -932,6 +974,31 @@ class Game {
       }
       const action = await player.pickAction(actions)
       switch (action) {
+        case AUCTION:
+          const auctionAmts = await player.pickTradeAmounts('Offer to anyone');
+          const winner = await Promise.any(this.createAuction_(auctionAmts, player));
+          io.emit('clear');
+          if (winner) {
+            log(winner.getName() + " won the auction!");
+            for (const resource in auctionAmts.offer) {
+              const amt = auctionAmts.offer[resource];
+              if (amt) {
+                player.addResource(resource, -1 * amt);
+                winner.addResource(resource, amt);
+              }
+            }
+            for (const resource in auctionAmts.asking) {
+              const amt = auctionAmts.asking[resource];
+              if (amt) {
+                player.addResource(resource, amt);
+                winner.addResource(resource, -1 * amt);
+              }
+            }
+            sendGameState();
+          } else {
+            log("No takers!");
+          }
+          break;
         case EXCHANGE:
           const [amt, drop, pickup] = await player.exchange(this.board_.getAvailableBankTrades(player));
           if (amt == 'cancel') {
@@ -947,7 +1014,7 @@ class Game {
           if (!partner) {
             break;
           }
-          const tradeAmts = await player.pickTradeAmounts(partner)
+          const tradeAmts = await player.pickTradeAmounts('Offer a trade to ' + partner.getName())
           if (tradeAmts == 'cancel') {
             break;
           }
@@ -1130,6 +1197,8 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http, {
   pingTimeout: 60000,
 });
+const any = require('promise.any');
+Promise.any = any;
 
 let players = [];
 let game;

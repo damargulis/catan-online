@@ -124,6 +124,10 @@ function clearActions() {
   });
 }
 
+socket.on('clear', () => {
+  clearActions();
+});
+
 socket.on('alert', (msg) => {
   const audio = document.getElementById('notification');
   audio.src = "./resources/notification.mp3";

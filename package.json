@@ -4,6 +4,7 @@
   "description": "Play Catan With Friends!",
   "dependencies": {
     "express": "^4.15.2",
+    "promise.any": "^2.0.1",
     "socket.io": "^2.3.0"
   }
 }
