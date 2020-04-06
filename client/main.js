@@ -60,9 +60,9 @@ socket.on('game-state', (data) => {
     const chitNode = chitNodes[i];
     chitNode.textContent = chit;
     if (i == data.board.robber) {
-      chitNode.style.color = 'darkgrey';
+      chitNode.classList.add('robber');
     } else {
-      chitNode.style.color = 'black';
+      chitNode.classList.remove('robber');
     }
   });
   const playerTurnNode = document.getElementById('player-turn');
@@ -74,6 +74,7 @@ socket.on('game-state', (data) => {
       settlementButtons[i].style.visibility = 'visible';
       if (settlement.city) {
         settlementButtons[i].classList.add('city');
+        settlementButtons[i].style.boxShadow = '0 0 15px 10px ' + settlement.color;
       }
     }
   });

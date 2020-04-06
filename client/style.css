@@ -64,10 +64,16 @@
 
 .chit {
   display: inline-block;
-  width: 3.7em;
-  padding-top: 2em;
+  width: 1.5em;
+  margin-right: 2.2em;
+  border-radius: 50%;
+  text-align: center;
+  margin-top: 2em;
+  background-color: white;
 }
-
+.chit.robber {
+  color: red;
+}
 .board-container {
   position: absolute;
   height: 100%;
@@ -241,12 +247,14 @@
 .ore {
   background-color: grey;
 }
+
 .wool {
   background-color: lightblue;
 }
 .desert {
   background-color: black;
 }
+
 .player {
   height: 90px;
   width: 23%;
@@ -279,8 +287,4 @@
 #log {
   height: 100px;
   overflow: scroll;
-}
-
-.city {
-  box-shadow: 3px 3px brown, -3px 3px brown, 3px -3px brown, -3px -3px brown;
 }
