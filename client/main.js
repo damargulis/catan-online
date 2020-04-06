@@ -32,6 +32,10 @@ socket.on('over', (winner) => {
 });
 
 socket.on('game-state', (data) => {
+  const dice = document.getElementsByClassName("die");
+  data.roll.forEach((roll, i) => {
+    dice[i].textContent = roll;
+  });
   const playerDivs = document.getElementsByClassName('player');
   data.players.forEach((player, i) => {
     const playerDiv = playerDivs[i];
@@ -132,7 +136,7 @@ socket.on('alert', (msg) => {
   const audio = document.getElementById('notification');
   audio.src = "./resources/notification.mp3";
   audio.play();
-  alert(msg.text);
+  //alert(msg.text);
 });
 
 socket.on('action', (msg, resolve) => {

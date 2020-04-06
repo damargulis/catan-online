@@ -1,3 +1,13 @@
+#board-info {
+  float: right;
+}
+
+.die {
+  border: solid 1px;
+  margin: 20px;
+  font-size: 30px;
+  padding: 10px;
+}
 
 .port {
   height: 20px;

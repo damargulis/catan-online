@@ -7,11 +7,11 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="./main.js"></script>
   <body>
-    <div id="welcome" >
-      <h1>Welcome to Catan!</h1>
-      <input id="name" type="text" placeholder="Enter Your Name" />
-      <button onClick="onSubmit()" >Join Game</button>
-    </div>
+  <div id="welcome" >
+    <h1>Welcome to Catan!</h1>
+    <input id="name" type="text" placeholder="Enter Your Name" />
+    <button onClick="onSubmit()" >Join Game</button>
+  </div>
     <div id="main">
       <audio id="notification"></audio>
       <div id="info-panel">
@@ -21,6 +21,10 @@
         <div class="player"><div class="name"></div><div class="points"></div><div class="cards"></div><div class="resources-held"></div><div class="knights"></div></div>
       </div>
       <div id="board">
+        <div id="board-info">
+          <div class="die">6</div>
+          <div class="die">6</div>
+        </div>
         <div class="board-container" id="roads">
           <div class="row six right">
             <div class="road"></div>
@@ -259,28 +263,29 @@
           </div>
         </div>
       </div>
-    <div id="game-info">
-      <div id="turn-info">
-        <div id="player-turn"></div>
-        <div id="action-info"></div>
-        <div id="buttons"></div>
-      </div>
-      <div id="hand-info">
-        <div>
-          <div>Settlements: <span id="settlements-left">5</span></div>
-          <div>Cities: <span id="cities-left">4</span></div>
-          <div>Roads: <span id="roads-left">15</span></div>
+      <div id="game-info">
+        <div id="turn-info">
+          <div id="player-turn"></div>
+          <div id="action-info"></div>
+          <div id="buttons"></div>
         </div>
-        <div>
-          <div class="brick">Brick: <span id="brick">0</span></div>
-          <div class="grain">Grain: <span id="grain">0</span></div>
-          <div class="lumber">Lumber: <span id="lumber">0</span></div>
-          <div class="ore">Ore: <span id="ore">0</span></div>
-          <div class="wool">Wool: <span id="wool">0</span></div>
+        <div id="hand-info">
+          <div>
+            <div>Settlements: <span id="settlements-left">5</span></div>
+            <div>Cities: <span id="cities-left">4</span></div>
+            <div>Roads: <span id="roads-left">15</span></div>
+          </div>
+          <div>
+            <div class="brick">Brick: <span id="brick">0</span></div>
+            <div class="grain">Grain: <span id="grain">0</span></div>
+            <div class="lumber">Lumber: <span id="lumber">0</span></div>
+            <div class="ore">Ore: <span id="ore">0</span></div>
+            <div class="wool">Wool: <span id="wool">0</span></div>
+          </div>
+          <div id="cards-held"></div>
         </div>
-        <div id="cards-held"></div>
+        <div id="log">Log</div>
       </div>
-      <div id="log">Log</div>
     </div>
   </body>
 </html>

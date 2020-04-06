@@ -323,9 +323,10 @@ class Board {
         return [resource, 2];
       } else if (hasAny && player.resources_[resource] >= 3) {
         return [resource, 3];
-      } else {
-        return null;
+      } else  if (player.resources_[resource] >= 4) {
+        return [resource, 4];
       }
+      return null;
     }).filter((a) => !!a);
   }
 
@@ -366,6 +367,7 @@ class Board {
         log(owner.getName() + " picked up " + amt + " " + resource);
       });
     });
+    sendGameState();
   }
 
   getAvailableCities(player) {
@@ -820,6 +822,7 @@ class Player {
 
 class Game {
   constructor(players) {
+    this.lastRoll_ = [];
     this.players_ = players;
     this.board_ = new Board();
     this.playerTurn_ = Math.floor(Math.random() * this.players_.length);
@@ -838,6 +841,7 @@ class Game {
         while (roll < 0 || (roll == 7 && turns < this.players_.length)) {
           const die1 = Math.floor(Math.random() * 6) + 1;
           const die2 = Math.floor(Math.random() * 6) + 1;
+          this.lastRoll_ = [die1, die2];
           roll = die1 + die2;
         }
         log(player.getName() + " rolled " + roll);
@@ -976,6 +980,9 @@ class Game {
       switch (action) {
         case AUCTION:
           const auctionAmts = await player.pickTradeAmounts('Offer to anyone');
+          if (tradeAmts == 'cancel') {
+            break;
+          }
           const winner = await Promise.any(this.createAuction_(auctionAmts, player));
           io.emit('clear');
           if (winner) {
@@ -1184,6 +1191,7 @@ class Game {
 
   serialize() {
     return {
+      'roll': this.lastRoll_,
       'board': this.board_.serialize(),
       'players': this.players_.map((player) => player.serialize()),
       'playerTurn': this.players_[this.playerTurn_].getName(),
