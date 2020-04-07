@@ -980,7 +980,7 @@ class Game {
       switch (action) {
         case AUCTION:
           const auctionAmts = await player.pickTradeAmounts('Offer to anyone');
-          if (tradeAmts == 'cancel') {
+          if (auctionAmts == 'cancel') {
             break;
           }
           const winner = await Promise.any(this.createAuction_(auctionAmts, player));
