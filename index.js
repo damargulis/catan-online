@@ -232,22 +232,28 @@ class Board {
     }
   }
 
-  dfs_(roadIndex, player, visited = new Set(), length = 0) {
+  dfs_(roadIndex, player, visited = new Set(), length = 0, lastSettlement = null) {
     visited.add(roadIndex);
     const settlements = RoadToSettlementMap[roadIndex];
-    const adjRoads = RoadToSettlementMap.map(([s1, s2], index) => {
-      if (settlements.indexOf(s1) >= 0 || settlements.indexOf(s2) >= 0) {
-        return index;
+    const amts = settlements.map((settlement) => {
+      if (settlement == lastSettlement) {
+        return length;
       }
-      return -1;
-    }).filter((a) => a >= 0);
-    const ownedAdjRoads = adjRoads.filter((r) => this.roads_[r].getOwner() == player);
-    const unseen = ownedAdjRoads.filter((r) => !visited.has(r));
-    if (unseen.length == 0) {
-      return length + 1;
-    }
-    const amts = unseen.map((r) => {
-      return this.dfs_(r, player, visited, length + 1);
+      const adjRoads = RoadToSettlementMap.map(([s1, s2], index) => {
+        if (settlement == s1 || settlement == s2) {
+          return index;
+        }
+        return -1;
+      }).filter((a) => a >= 0);
+      const ownedAdjRoads = adjRoads.filter((r) => this.roads_[r].getOwner() == player);
+      const unseen = ownedAdjRoads.filter((r) => !visited.has(r));
+      if (unseen.length == 0) {
+        return length + 1;
+      }
+      const innerAmts = unseen.map((r) => {
+        return this.dfs_(r, player, visited, length + 1, settlement);
+      });
+      return Math.max(...innerAmts);
     });
     return Math.max(...amts);
   }
@@ -1217,10 +1223,15 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/client/welcome.html');
 });
 
+const MAX_PLAYERS = 4;
+
 io.on('connection', (socket) => {
+  socket.on('disconnect', (socket) => {
+    console.log('disconnected');
+  });
   console.log('A user connected');
   socket.on('join', (name) => {
-    if (players.length >= 4) {
+    if (players.length >= MAX_PLAYERS) {
       return;
     }
     const color = playerColor[players.length];
@@ -1230,7 +1241,7 @@ io.on('connection', (socket) => {
     io.emit('user-join', {
       players: players.map(player => player.serialize()),
     });
-    if (players.length == 4) {
+    if (players.length == MAX_PLAYERS) {
       game = new Game(players);
       sendGameState();
       log('Game Started');

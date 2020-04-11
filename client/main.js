@@ -237,7 +237,6 @@ socket.on('action', (msg, resolve) => {
         if (index != msg.data.current) {
           chit.classList.add('available');
           chit.onclick = () => {
-            console.log('resolving');
             resolve(index);
           };
         }
@@ -267,7 +266,6 @@ socket.on('action', (msg, resolve) => {
       submit.textContent = 'Submit';
       buttonsNode.append(submit);
       submit.onclick = () => {
-        console.log('submit clicked');
         const ans = {};
         const inputs = [...document.getElementsByClassName('resource-dropper')];
         let total = 0;
@@ -286,7 +284,6 @@ socket.on('action', (msg, resolve) => {
       break;
     case 'city':
       actionTextNode.textContent = 'Pick a settlement to city';
-      console.log('available: ' + msg.data.available);
       const settlementButtons = document.getElementsByClassName('settlement');
       msg.data.available.forEach((index) => {
         const settlementButton = settlementButtons[index];
