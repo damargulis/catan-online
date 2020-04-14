@@ -851,12 +851,15 @@ class Game {
           roll = die1 + die2;
         }
         log(player.getName() + " rolled " + roll);
+        sendGameState();
         if (roll != 7) {
           this.board_.collectResources(roll);
+          sendGameState();
         } else {
           await Promise.all(this.players_.map((player) => player.loseHalfResources()));
           sendGameState();
           await this.moveRobber_(player);
+          sendGameState();
         }
         await this.doTurn_(player);
         turns++;
@@ -1230,6 +1233,7 @@ io.on('connection', (socket) => {
     console.log('disconnected');
   });
   console.log('A user connected');
+  console.log('id: ' + socket.id);
   socket.on('join', (name) => {
     if (players.length >= MAX_PLAYERS) {
       return;
