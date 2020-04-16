@@ -579,7 +579,9 @@ class Player {
       'text': 'Select a card to play.',
       'cancellable': true,
     }).then((card) => {
-      this.cards_.splice(this.cards_.indexOf(card), 1);
+      if (card != 'cancel') {
+        this.cards_.splice(this.cards_.indexOf(card), 1);
+      }
       return card;
     });
   }
