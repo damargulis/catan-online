@@ -951,6 +951,7 @@ class Game {
   }
 
   async doTurn_(player) {
+    let hasPlayedDCard = false;
     //todo: top level enum
     const END_TURN = 'End Turn';
     const ROAD = 'Buy Road';
@@ -975,7 +976,7 @@ class Game {
       if (player.canAffordCard() && this.board_.canBuyCard()) {
         actions.push(BUY_CARD);
       }
-      if (player.canPlayCard()) {
+      if (player.canPlayCard() && !hasPlayedDCard) {
         actions.push(PLAY_CARD);
       }
       if (this.canTrade_(player)) {
@@ -1064,6 +1065,7 @@ class Game {
           if (card == 'cancel') {
             break;
           }
+          hasPlayedDCard = true;
           log(player.getName() + ' played a ' + card);
           let resource;
           switch (card) {
