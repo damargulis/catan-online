@@ -1086,6 +1086,9 @@ class Game {
             case Cards.MONOPOLY:
               resource = await player.pickResource();
               const total = this.players_.reduce((total, p) => {
+                if (p == player) {
+                  return total;
+                }
                 const amt = p.takeResource(resource);
                 log(`${player.getName()} took ${amt} ${resource} from ${p.getName()}`);
                 return total + amt;
